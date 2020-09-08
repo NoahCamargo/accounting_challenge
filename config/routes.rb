@@ -4,4 +4,6 @@ Rails.application.routes.draw do
         action: 'options',
         constraints: { method: 'OPTIONS' },
         via: [:options]
+
+  resources :accounts, only: :create
 end
