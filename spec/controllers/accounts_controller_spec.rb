@@ -23,4 +23,37 @@ RSpec.describe AccountsController, type: :controller do
       expect(response_json).to have_key('account_id')
     end
   end
+
+  describe 'POST#bank_transaction Account' do
+
+    before do
+      @headers ||= authorization_account!(Account.first)
+
+      request.headers.merge!(@headers)
+    end
+
+    it 'Transaction failed' do
+      post :bank_transaction
+
+      expect(response).not_to be_successful
+      expect(JSON.parse(response.body).length).to eq(3)
+    end
+
+    it 'Account creation success' do
+      source_account = Account.first
+      destination_account = Account.create!(name: Faker::Name.name, opening_balance: 100000)
+
+      source_account.update(opening_balance: 10000)
+
+      params = {
+        source_account_id: source_account.id,
+        destination_account_id: destination_account.id,
+        amount: 1000
+      }
+
+      post :bank_transaction, params: params, as: :json
+
+      expect(response).to be_successful
+    end
+  end
 end

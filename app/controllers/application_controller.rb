@@ -17,7 +17,7 @@ class ApplicationController < ActionController::API
     return @current_user if @current_user
     return unless JwtStorage.exist?(verify_signature)
 
-    @current_user = User.cached_find(JwtStorage.decode(get_token).first['account_id'])
+    @current_user = Account.cached_find(JwtStorage.decode(get_token).first['account_id'])
   rescue StandardError
     nil
   end

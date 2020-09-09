@@ -6,7 +6,21 @@ class Account < ApplicationRecord
 
   validates_uniqueness_of :id
 
+  after_commit :flush_cache
+
   def get_balance
     (credits.sum(:amount) - debits.sum(:amount)) + opening_balance
+  end
+
+  def self.cached_find(id)
+    Rails.cache.fetch([name, id], expires_in: 10.minutes) do
+      find(id)
+    end
+  end
+
+  private
+
+  def flush_cache
+    Rails.cache.delete([self.class.name, id])
   end
 end

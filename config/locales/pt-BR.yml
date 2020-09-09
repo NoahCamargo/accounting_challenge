@@ -103,6 +103,8 @@ pt-BR:
   errors: &errors
     format: ! '%{attribute} %{message}'
     messages:
+      insufficient_balance: saldo insuficiente
+      same_account: não pode ser a mesma conta
       not_saved: ""
       accepted: deve ser aceito
       blank: não pode ficar em branco
