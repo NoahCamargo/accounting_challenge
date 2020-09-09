@@ -31,6 +31,7 @@ group :development, :test do
 
   gem 'rspec-rails'
   gem 'database_cleaner-active_record'
+  gem 'faker'
 end
 
 group :development do
