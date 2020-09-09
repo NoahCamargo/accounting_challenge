@@ -10,13 +10,23 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_09_08_045611) do
+ActiveRecord::Schema.define(version: 2020_09_09_032425) do
 
   create_table "accounts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
     t.integer "opening_balance"
     t.string "name"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "bank_transactions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
+    t.bigint "source_account_id"
+    t.bigint "destination_account_id"
+    t.integer "amount"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+    t.index ["destination_account_id"], name: "index_bank_transactions_on_destination_account_id"
+    t.index ["source_account_id"], name: "index_bank_transactions_on_source_account_id"
   end
 
   create_table "jwt_storages", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8mb4", force: :cascade do |t|
@@ -30,5 +40,7 @@ ActiveRecord::Schema.define(version: 2020_09_08_045611) do
     t.index ["verify_signature"], name: "index_jwt_storages_on_verify_signature"
   end
 
+  add_foreign_key "bank_transactions", "accounts", column: "destination_account_id"
+  add_foreign_key "bank_transactions", "accounts", column: "source_account_id"
   add_foreign_key "jwt_storages", "accounts"
 end

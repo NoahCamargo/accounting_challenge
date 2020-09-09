@@ -33,5 +33,21 @@ RSpec.describe Account, type: :model do
 
       expect(account).to_not be_valid
     end
+
+    it 'Get balance' do
+      create_account.dup.save!
+
+      source_account = Account.first
+      destination_account = Account.second
+
+      source_account.update(opening_balance: 10000)
+
+      BankTransaction.new(source_account: source_account, destination_account: destination_account, amount: 5000).save!
+      BankTransaction.new(source_account: source_account, destination_account: destination_account, amount: 5000).save!
+
+      BankTransaction.new(source_account: destination_account, destination_account: source_account, amount: 2000).save!
+
+      expect(source_account.get_balance).to eq(2000)
+    end
   end
 end
