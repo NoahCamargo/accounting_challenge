@@ -6,6 +6,10 @@ Rails.application.routes.draw do
         via: [:options]
 
   resources :accounts, only: :create do 
-    post :bank_transaction, path: 'bank-transaction', on: :collection
+    collection do
+      get :check_balance, path: 'check-balance'
+
+      post :bank_transaction, path: 'bank-transaction'
+    end
   end
 end

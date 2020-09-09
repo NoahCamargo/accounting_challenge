@@ -1,5 +1,5 @@
 class AccountsController < ApplicationController
-  before_action :authenticate_user!, only: :bank_transaction
+  before_action :authenticate_account!, except: :create
 
   def create
     account = Account.new(permitted_params)
@@ -9,6 +9,16 @@ class AccountsController < ApplicationController
     token = JwtStorage.generate_token!({ account_id: account.id }, account.id)
 
     render_json(account_id: account.id, token: token)
+  end
+
+  def check_balance
+    account = Account.find_by_id(params[:account_id])
+
+    return render_json({ account_id: I18n.t("errors.messages.not_exist") }, 400) unless account
+
+    token = JwtStorage.generate_token!({ account_id: account.id }, account.id)
+
+    render_json(balance: account.get_balance)
   end
 
   def bank_transaction

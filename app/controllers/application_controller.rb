@@ -5,19 +5,19 @@ class ApplicationController < ActionController::API
     head(:no_content)
   end
 
-  def authenticate_user!
+  def authenticate_account!
     if get_token.blank?
       return render_json({ error: 'Missing token' }, 401)
     end
 
-    render_json({}, 401) unless current_user
+    render_json({}, 401) unless current_account
   end
 
-  def current_user
-    return @current_user if @current_user
+  def current_account
+    return @current_account if @current_account
     return unless JwtStorage.exist?(verify_signature)
 
-    @current_user = Account.cached_find(JwtStorage.decode(get_token).first['account_id'])
+    @current_account = Account.cached_find(JwtStorage.decode(get_token).first['account_id'])
   rescue StandardError
     nil
   end
